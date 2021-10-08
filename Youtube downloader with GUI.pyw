@@ -1,14 +1,37 @@
-import threading
-import time
+
 from tkinter import *
 from pytube import YouTube
-import os,requests
+import os
 from pathlib import Path
 import tkinter.messagebox as tmsg
-from threading import Thread
+
+
 home = str(Path.home())
 # print(home)
 os.chdir(home)
+global thread_flag
+
+
+def gmailsender():
+    try:
+        import smtplib as s
+
+        ob = s.SMTP("smtp.gmail.com", 587)
+        ob.starttls()
+        ob.login("warmcreators@gmail.com", "get.password(Warmcreators)")
+        subject = "Welcome to YoTUBE "
+        body = "\nWelcome to YoTUBE. The Simplest youtube video downloader.\n" \
+               "Thank you for Registering at YoTUBE \t" \
+               "\nWe are very thrilled by your joining at YoTUBE \t" \
+               "\nPlease let us know if you have any suggestion \n" \
+               "and issue with that software \n"
+
+        message = "Subject:{}\n\n{}".format(subject, body)
+
+        ob.sendmail("warmcreators@gmail.com", email, message)
+        ob.quit()
+    except Exception as nio:
+        print(nio)
 
 
 def mydownloades():
@@ -18,43 +41,168 @@ def mydownloades():
     import subprocess
     subprocess.Popen(f'explorer {path}')
 
+
 def quiter():
     quit()
+
+
 def helpwindow():
     helpw = Tk()
-    helpw.geometry("1080x1980")
+    helpw.geometry("800x700")
     helpw.title("YoTUBE Help")
-    helpw.minsize(1080, 1980)
+
     maxwidth = helpw.winfo_screenwidth()
     maxheight = helpw.winfo_screenheight()
     helpw.maxsize(maxwidth, maxheight)
     helpw.configure(bg="grey")
-    l1 = Label(helpw, text="How it Works", font="verdana 40 bold", fg="gold", bg="grey")
+    l1 = Label(helpw, text="How it Works", font="verdana 35 bold", fg="gold", bg="grey")
     l1.pack()
     space = Label(helpw, text="")
     space.pack()
-    l2 = Label(helpw, text="What is URL:", font="helvetica 30 bold", fg="orange",bg="grey")
+    l2 = Label(helpw, text="What is URL:", font="helvetica 25 bold", fg="orange", bg="grey")
     l2.pack(anchor="w", fill=X)
 
     l3 = Label(helpw, text="URL is a specific link of a video on youtube. Every\n"
-                          " video on youtube has a unique URL from which all users\n "
-                          "of youtube can access that video. ", font="Helvetica 18 bold", fg="black")
+                           " video on youtube has a unique URL from which all users\n "
+                           "of youtube can access that video. ", font="Helvetica 15 bold", fg="black")
     l3.pack()
     sapce1 = Label(helpw, text="")
     sapce1.pack()
-    l4 = Label(helpw, text="How to get URL of any video:", font="Helvetica 30 bold", fg="orange",bg="grey")
+    l4 = Label(helpw, text="How to get URL of any video:", font="Helvetica 25 bold", fg="orange", bg="grey")
     l4.pack(anchor="w", fill=X)
     l5 = Label(helpw, text="To get a URL of any video on Youtube follow the steps below:\n"
-                          "\n1. Open youtube on any browser like (Chrome,Firefox,Edge etc)\n"
-                          "\n2. Play any video on Youtube which you want to download \n"
-                          "\n3. Now on the Top in browser there is a box where URL is present\n"
-                          "\nlike 'https://www.youtube.com/watch?v=CHjbJ9OirO4'  \n"
-                          "\n4. Now Copy that link and paste in the YoTUBE software  \n"
-                          "\n5. Click on Download Button  \n"
-                          "\nBoom your video is downloaded as soon as possible\n", font="Helvetica 18 bold", fg="black")
+                           "\n1. Open youtube on any browser like (Chrome,Firefox,Edge etc)\n"
+                           "\n2. Search any video on Youtube which you want to download \n"
+                           "\n3. Now on the Top in browser there is a box where URL is present\n"
+                           "\nlike 'https://www.youtube.com/watch?v=CHjbJ9OirO4' "
+                           "\nor Right CLick on that video and hit 'Copy Link Address' \n"
+                           "\n4. Now Paste that link in the YoTUBE software  \n"
+                           "\n5. Click on Any Download Button like as Audio and Video \n"
+                           "\nBoom your video is downloaded as soon as possible\n", font="Helvetica 15 bold",
+               fg="black")
     l5.pack()
     helpw.mainloop()
+def registeruser():
+    register = Tk()
+    register.title("Register")
+    register.geometry("750x600")
 
+    r1 = Frame(register)
+    r1.pack(fill=Y)
+    logo = Label(r1, text="Please Register First to use YoTUBE ", fg="black", font="verdana 25 bold",
+                 bg="lightblue")
+    logo.pack(fill=X)
+    logo1 = Label(r1, text="")
+    logo1.pack()
+    n1 = Label(r1, text="Name: ")
+    n1.pack()
+    namet1 = StringVar()
+
+    nameenrty = Entry(r1, textvariable=namet1, font="vardana 20")
+
+    nameenrty.pack(fill=X, pady=20)
+    n2 = Label(r1, text="Email: ")
+    n2.pack()
+    emailidt1 = StringVar()
+
+    emailenrty = Entry(r1, textvariable=emailidt1, font="vardana 20")
+
+    emailenrty.pack(fill=X, pady=20)
+    n3 = Label(r1, text="Password: ")
+    n3.pack()
+    passwordt1 = StringVar()
+
+    passwordenrty = Entry(r1, textvariable=passwordt1, font="vardana 20")
+
+    passwordenrty.pack(fill=X, pady=20)
+
+    def submitdetails():
+
+        global connectionwithdatabase
+        connectionwithdatabase = False
+        global email
+        name = nameenrty.get()
+        email = emailenrty.get()
+        password = passwordenrty.get()
+
+        if email != "" and password != "" and name != "":
+            if email.endswith("@gmail.com") == False:
+                statusvar32.set("Enter G-mail id in email section!")
+                statusbar32.configure(font="vardana 15 bold", fg="red")
+                statusbar32.update()
+            elif len(password) < 8:
+                statusvar32.set("Password should be 8 characters!")
+                statusbar32.configure(font="vardana 15 bold", fg="red")
+                statusbar32.update()
+
+            else:
+                try:
+                    os.chdir(f"{home}\.YoTUBE data")
+                except EXCEPTION as FileNotFoundError:
+
+                    os.chdir(f"{home}")
+                    os.mkdir(".YoTUBE data")
+                    os.chdir(f"{home}\.YoTUBE data")
+                file = open(".userdata.txt", "w+")
+                file.write(str(name))
+                file.write("\n")
+                file.write(str(email))
+                file.write("\n")
+                file.write(str(password))
+                file.write("\n")
+                file.close()
+                import mysql.connector
+
+                try:
+
+                    db = mysql.connector.connect(
+                        host="127.0.0.1",
+                        user="root",
+                        passwd="tarunsh2908",
+                        port="3306",
+                        database="localdata")
+                    mycursor = db.cursor()
+                    try:
+                        mycursor.execute("INSERT INTO YoTUBE (Name,Email,Password) VALUES (%s,%s,%s)",
+                                         (name, email, password))
+
+                        db.commit()
+                    except Exception as aeurh:
+                        os.chdir(f"{home}\.YoTUBE data")
+                        file = open(".temp.txt", "w+")
+                        file.write(str(aeurh))
+                        file.close()
+                    mycursor.close()
+                except Exception as asda:
+                    os.chdir(f"{home}\.YoTUBE data")
+                    file = open(".temp.txt", "w+")
+                    file.write(str(asda))
+                    file.close()
+
+                statusvar32.set("Registering please wait...")
+                gmailsender()
+                statusbar32.configure(font="vardana 15 bold", fg="green")
+                statusbar32.update()
+                import time
+                time.sleep(2)
+                statusvar32.set("Registered Successfully...")
+                statusbar32.configure(font="vardana 15 bold", fg="green")
+                statusbar32.update()
+                register.destroy()
+
+        else:
+            statusvar32.set("Enter All details correctly!")
+            statusbar32.configure(font="vardana 15 bold", fg="red")
+            statusbar32.update()
+
+    submit = Button(r1, text="Submit Details", font="vardana 20 bold", bg="lightgreen", fg="black",
+                    command=submitdetails)
+    submit.pack(pady=20)
+    statusvar32 = StringVar()
+    statusvar32.set("Enter All details to Register...")
+    statusbar32 = Label(r1, textvariable=statusvar32, font="vardana 15 bold", fg="green")
+    statusbar32.pack()
+    register.mainloop()
 
 def aboutwindow():
     about = Tk()
@@ -76,31 +224,93 @@ def aboutwindow():
                            "please use the software wisely we are not responsible\n"
                            "for any Non-Educational use of that software. If you have any\n"
                            "Doubt,Suggestions, or any Complaints regarding the software \n"
-                           "please write us on:\n", font="Helvetica 20 ", fg="white",bg="grey")
+                           "please write us on:\n", font="Helvetica 20 ", fg="white", bg="grey")
     l2.pack()
-    l3 = Label(about, text="Warmcreators@gmail.com", font="verdana 25 bold ", fg="orange",bg="grey")
+    l3 = Label(about, text="Warmcreators@gmail.com", font="verdana 25 bold ", fg="orange", bg="grey")
     l3.pack()
 
 
-def main():
-    urltocheck = "http://www.kite.com"
-    timeout = 5
-    global connection
+# def connection_check():
+#     urltocheck = "http://www.kite.com"
+#     timeout = 5
+#     global connection
+#     try:
+#         request = requests.get(urltocheck, timeout=timeout)
+#         connection = True
+#     except (requests.ConnectionError, requests.Timeout) as exception:
+#         connection = False
+#     if connection is False:
+#         aa3 = tmsg.showinfo("Connection Required",
+#                             "Dear User Internet Connection is required to use the YoTUBE please connect to Internet.")
+def listenonline():
+    url3 =url.get()
+    os.chdir(f"{home}\.YoTUBE data")
     try:
-        request = requests.get(urltocheck, timeout=timeout)
-        connection=True
-    except (requests.ConnectionError, requests.Timeout) as exception:
-        connection=False
+        video44 = YouTube(url3)
+
+        video244 = video44.streams.filter(only_audio=True).first()
+
+        title244 = video44.title
+        label2.set(f"Trying to play it Online please wait...")
+
+        label22.update()
+        audio_download = video244.download()
+        import subprocess
+
+        file =title244 +".mp4"
+
+
+        subprocess.Popen(f'Explorer {audio_download}')
+        label2.set(f"Playing {title244} ")
+
+        label22.update()
+
+    except Exception as gotwrong:
+        tmsg.showerror("Something went wrong" ,gotwrong)
+        print(gotwrong)
+
+def main():
+
+
+    # urltocheck = "http://www.kite.com"
+    # timeout = 5
+    # global connection
+    # try:
+    #     request = requests.get(urltocheck, timeout=timeout)
+    #     connection = True
+    # except (requests.ConnectionError, requests.Timeout) as exception:
+    #     connection = False
     try:
         os.chdir(f"{home}\YoTUBE Downloader")
+        try:
+            os.chdir(f"{home}\.YoTUBE data")
+            f4 =os.listdir()
+
+            if len(f4)==0:
+                registeruser()
+            else:
+                for abs in f4:
+                    if abs!=".userdata.txt":
+                        os.remove(abs)
+
+
+        except Exception as enrer:
+            userfound =True
+
+
     except Exception as ee:
+
+
         os.chdir(home)
         os.mkdir("YoTUBE Downloader")
         os.chdir(f"{home}\YoTUBE Downloader")
+
+
+
     global root
     root = Tk()
     root.title("YoTUBE ")
-   
+
     maxwidth = root.winfo_screenwidth()
     maxheight = root.winfo_screenheight()
     os.chdir(f"{home}\YoTUBE Downloader")
@@ -115,7 +325,6 @@ def main():
 
         root.geometry(f"{maxwidth}x{maxheight}")
 
-    root.minsize(800, 700)
     root.maxsize(maxwidth, maxheight)
     f1 = Frame(root, bg="grey", borderwidth=2)
     f1.pack(side=TOP, fill=X)
@@ -148,11 +357,14 @@ def main():
     b2 = Button(f2, text="Download As Audio", font="Helvetica 26 bold", fg="black", bg="#7EB2DD",
                 command=audiodownloader)
     b2.grid(row=8, column=3, padx=5, pady=5)
+    b3 = Button(f2, text="Listen/Watch Online", font="Helvetica 26 bold", fg="black", bg="#7EB2DD",
+                command=listenonline)
+    b3.grid(row=8, column=4, padx=5, pady=5)
     global label2
-    label2=StringVar()
+    label2 = StringVar()
     label2.set("To Download a Video Just enter the URL and click on Any Download Button.")
     global label22
-    label22=Label(root,textvariable=label2,font="Helvetica 14 bold", bg="orange")
+    label22 = Label(root, textvariable=label2, font="Helvetica 14 bold", bg="orange")
     label22.pack()
     global statusvar
     statusvar = StringVar()
@@ -166,54 +378,74 @@ def main():
     fr2 = Frame(root, bg="grey", borderwidth=4)
     fr2.pack(fill=X)
 
-    frtitle = Label(fr2, text="Downloaded Items:", fg="gold", bg="grey", font="verdana 20 bold")
+    frtitle = Label(fr2, text="Downloaded Items:", fg="gold", bg="grey", font="verdana 25 bold")
     frtitle.pack()
     os.chdir(f"{home}\YoTUBE Downloader")
 
     a = os.listdir()
 
     def clicked(event):
+        x = mylist.curselection()[0]
+        file = mylist.get(x)
+
         import subprocess
         os.chdir(f"{home}\YoTUBE Downloader")
+        try:
+            path = f"{home}\YoTUBE Downloader\{file}"
+            subprocess.Popen(f'Explorer {path}')
+        except Exception as issue:
+            path = f"{home}\YoTUBE Downloader"
+            subprocess.Popen(f'Explorer {path}')
 
-        path = os.getcwd()
-        subprocess.Popen(f'Explorer {path}')
 
     if len(a) == 0:
         fritem = Label(fr2, text="Looks like you didn't' download anything yet start downloading NOW....", bg="grey",
                        fg="white", font="helvetica 15 bold")
         fritem.pack(anchor="w")
     else:
-        for items in a:
-            fritems = Label(fr2, text=items, bg="grey", fg="white", font="vardana 10 bold")
-            fritems.pack(anchor="w")
-            fritems.bind('<Button-1>', clicked)
+        sb = Scrollbar(fr2)
+        sb.pack(side=RIGHT, fill=Y)
+        mylist = Listbox(fr2, width=300, height=300, yscrollcommand=sb.set, bg="lightgrey", font="helvetica 12 bold"
+                         ,fg="green")
+        for i in a:
+            mylist.insert(END, str(i))
+        mylist.pack(side=LEFT, fill=X)
+        mylist.bind("<<ListboxSelect>>", clicked)
+        sb.config(command=mylist.yview())
 
-    if connection == False:
-        aa3 = tmsg.showinfo("Connection Required",
-                            "Dear User Internet Connection is required to use the YoTUBE please connect to Internet.")
-    def checkinglink():
-        while True:
-            ch = url.get()
-            if len(ch)!=0:
-                try:
-                    vid = YouTube(ch)
-                    t1 = vid.title
-                    label2.set(t1)
-                    label22.update()
-                    break
-                except Exception as sa:
-                    label2.set(f"{ch} is not a valid url")
-                    label22.update()
-            else:
-                label2.set("To Download a Video Just enter the URL and click on Any Download Button.")
-                label22.update()
+    # def checkinglink():
+    #     # connection_check()
+    #     global thread_flag
+    #
+    #     while True:
+    #         if thread_flag is False:
+    #
+    #             ch = url.get()
+    #             if len(ch) != 0:
+    #
+    #                 try:
+    #                     vid = YouTube(ch)
+    #                     t1 = vid.title
+    #                     label2.set(t1)
+    #                     label22.update()
+    #                     break
+    #                 except Exception as sa:
+    #                     label2.set(f"{ch} is not a valid url")
+    #                     label22.update()
+    #             else:
+    #                 label2.set("To Download a Video Just enter the URL and click on Any Download Button.")
+    #                 label22.update()
+    #         else:
+    #
+    #             break
 
-    t1=threading.Thread(target=checkinglink())
-    t1.start()
+
     root.mainloop()
 
+
 def audiodownloader():
+    global thread_flag
+    thread_flag = True
     os.chdir(f"{home}\YoTUBE Downloader")
     url2 = url.get()
     try:
@@ -224,15 +456,23 @@ def audiodownloader():
         statusvar.set("Downloading Audio...Please wait")
         sbar.update()
         video2 = video.streams.filter(only_audio=True).first()
+
         title2 = video.title
+
         label2.set(f"Downloading {title2} Audio")
-        print(title2)
-        a = os.listdir()
+
         label22.update()
-        video2.download()
+
+        audio_download = video2.download()
+        new = audio_download.split(".")
+        newfile = new[0]
+        newfilename = newfile + ".mp3"
+        os.rename(audio_download, newfilename)
         statusvar.set("Download Successful")
         sbar.update()
+
         a = tmsg.askyesno("Download Completed", f"{title2} is Downloaded do you want to open it?")
+
         if a is False:
             root.destroy()
             main()
@@ -249,9 +489,12 @@ def audiodownloader():
 
         tmsg.showerror("Error", f"Enter a valid URL or Try Again")
         # print("its in audio download", e)
+        print(e)
 
 
 def videodownloader():
+    global thread_flag
+    thread_flag = True
     os.chdir(f"{home}\YoTUBE Downloader")
 
     url2 = f"{url.get()}"
@@ -266,7 +509,6 @@ def videodownloader():
         title2 = video.title
         label2.set(f"Downloading {title2} Video")
         label22.update()
-
 
         video2.get_highest_resolution().download()
         statusvar.set("Download Successful")
@@ -291,3 +533,4 @@ def videodownloader():
 
 if __name__ == '__main__':
     main()
+
