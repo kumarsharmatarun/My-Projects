@@ -268,7 +268,36 @@ def listenonline():
     except Exception as gotwrong:
         tmsg.showerror("Something went wrong" ,gotwrong)
         print(gotwrong)
+def myprofile():
+    os.chdir(f"{home}\.YoTUBE data")
+    file=open(".userdata.txt","r")
+    details=file.readlines()
+    profile = Tk()
+    profile.title("User Details")
+    profile.geometry("800x650")
+    file.close()
+    password=details[2]
+    passlen=len(password)
+    password2=""
+    for i in range(passlen):
+        password2+="x"
+    # r1 = Frame(profile)
+    # r1.pack(fill=BOTH)
 
+    logo = Label(profile, text="User Details:", fg="black", font="verdana 22 bold",
+                 bg="lightblue")
+    logo.pack(fill=X)
+    logo1 = Label(profile, text=" ")
+    logo1.pack()
+    logo1 = Label(profile, text=f"Name: \t {details[0]}",font="verdana 15 bold")
+    logo1.pack()
+    logo1 = Label(profile, text=f"Email: \t {details[1]}",font="verdana 15 bold")
+    logo1.pack()
+    logo1 = Label(profile, text=f"Password: \t {password2}",font="verdana 15 bold")
+    logo1.pack()
+
+
+    profile.mainloop()
 def main():
 
 
@@ -336,6 +365,7 @@ def main():
     mymenu.add_command(label="Exit", font="Helvetica 10 bold", command=quiter)
     mymenu.add_command(label="Help", font="Helvetica 10 bold", command=helpwindow)
     mymenu.add_command(label="About", font="Helvetica 10 bold", command=aboutwindow)
+    mymenu.add_command(label="Profile ", font="Helvetica 10 bold", command=myprofile)
 
     root.config(menu=mymenu)
 
